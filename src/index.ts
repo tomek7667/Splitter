@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
+import { run } from "./lib";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -37,3 +38,28 @@ app.on("activate", () => {
 ipcMain.on("getAppVersion", (event) => [
 	event.sender.send("appVersion", app.getVersion()),
 ]);
+
+ipcMain.on(
+	"run",
+	async (
+		event,
+		{
+			fileInputPath,
+			outputSequenceFileLengthValue,
+		}: { outputSequenceFileLengthValue: number; fileInputPath: string }
+	) => {
+		try {
+			await run(fileInputPath, outputSequenceFileLengthValue);
+
+			event.sender.send("run", {
+				success: true,
+				errorMessage: null,
+			});
+		} catch (err) {
+			event.sender.send("run", {
+				success: false,
+				errorMessage: err?.message ?? err?.toString(),
+			});
+		}
+	}
+);

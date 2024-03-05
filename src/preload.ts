@@ -18,7 +18,49 @@ export const unblockElement = (element: HTMLElement) => {
 	}
 };
 
+let fileInputPath = "";
+let outputSequenceFileLengthValue: number;
+
 window.addEventListener("DOMContentLoaded", () => {
+	const fileInput = document.getElementById("sequence-file-input");
+	const outputSequenceFileLength = document.getElementById(
+		"output-sequence-length-input"
+	);
+	const sequencePathInputLabel = document.getElementById(
+		"sequence-file-label"
+	);
+	const splitButton = document.getElementById("split-button");
+
+	fileInput.addEventListener("change", (event) => {
+		const target = event.target as HTMLInputElement;
+		const file = target.files[0];
+		if (file) {
+			sequencePathInputLabel.innerText = file.name;
+			fileInputPath = file.path;
+		}
+	});
+
+	outputSequenceFileLength.addEventListener("input", (event) => {
+		const target = event.target as HTMLInputElement;
+		const value = target.value;
+		if (value) {
+			target.value = value.replace(/\D/g, "");
+			outputSequenceFileLengthValue = parseInt(target.value);
+		}
+	});
+
+	splitButton.addEventListener("click", () => {
+		if (fileInputPath && outputSequenceFileLengthValue) {
+			blockElement(splitButton);
+			ipcRenderer.send("run", {
+				fileInputPath,
+				outputSequenceFileLengthValue,
+			});
+		} else {
+			alert("Please select a file and set the output sequence length");
+		}
+	});
+
 	ipcRenderer.send("getAppVersion");
 
 	ipcRenderer.on("appVersion", (event, appVersion) => {
@@ -30,5 +72,7 @@ window.addEventListener("DOMContentLoaded", () => {
 		if (!success && errorMessage) {
 			alert(errorMessage);
 		}
+		alert("Successfully finished");
+		unblockElement(splitButton);
 	});
 });
