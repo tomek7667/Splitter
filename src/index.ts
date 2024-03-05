@@ -10,12 +10,13 @@ if (require("electron-squirrel-startup")) {
 }
 
 const createWindow = (): void => {
+	const icon = path.join(__dirname, "images/favicon.icns");
 	const mainWindow = new BrowserWindow({
 		webPreferences: {
 			preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
 			nodeIntegration: true,
 		},
-		icon: path.join(__dirname, "images/favicon.png"),
+		icon,
 	});
 
 	mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);

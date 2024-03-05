@@ -1,4 +1,6 @@
+import packageJson from "./package.json";
 import type { ForgeConfig } from "@electron-forge/shared-types";
+import path from "path";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { MakerZIP } from "@electron-forge/maker-zip";
 import { MakerDeb } from "@electron-forge/maker-deb";
@@ -9,10 +11,14 @@ import { WebpackPlugin } from "@electron-forge/plugin-webpack";
 import { mainConfig } from "./webpack.main.config";
 import { rendererConfig } from "./webpack.renderer.config";
 
+const icon = path.join(__dirname, "images/favicon.icns");
+
 const config: ForgeConfig = {
 	packagerConfig: {
+		name: packageJson.name,
 		asar: true,
-		icon: "./images/favicon.png",
+		overwrite: true,
+		icon,
 	},
 	rebuildConfig: {},
 	makers: [
@@ -22,7 +28,7 @@ const config: ForgeConfig = {
 		new MakerDeb({}),
 	],
 	plugins: [
-		new AutoUnpackNativesPlugin({}),
+		new AutoUnpackNativesPlugin({ icon }),
 		new WebpackPlugin({
 			mainConfig,
 			renderer: {
@@ -38,6 +44,8 @@ const config: ForgeConfig = {
 					},
 				],
 			},
+			port: 12345,
+			loggerPort: 12346,
 		}),
 	],
 };
