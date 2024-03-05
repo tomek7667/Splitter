@@ -14,7 +14,7 @@ const createWindow = (): void => {
 			preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
 			nodeIntegration: true,
 		},
-		icon: path.join(__dirname, "images/favicon.jpeg"),
+		icon: path.join(__dirname, "images/favicon.png"),
 	});
 
 	mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);

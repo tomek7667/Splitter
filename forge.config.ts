@@ -12,7 +12,7 @@ import { rendererConfig } from "./webpack.renderer.config";
 const config: ForgeConfig = {
 	packagerConfig: {
 		asar: true,
-		icon: "./images/favicon.jpeg",
+		icon: "./images/favicon.png",
 	},
 	rebuildConfig: {},
 	makers: [
