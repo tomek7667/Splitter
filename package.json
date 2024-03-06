@@ -2,6 +2,7 @@
 	"name": "splitter",
 	"productName": "Splitter",
 	"version": "1.0.2",
+	"description": "Splitter is a simple app to split files into smaller parts and merge them back together. It's designed for sequences files Fasta, Fastq and Genbank.",
 	"main": ".webpack/main",
 	"scripts": {
 		"start": "electron-forge start",
