@@ -84,11 +84,11 @@ export const run = async (
 	const outputPath = path.resolve(selectedPath);
 	await Promise.all(
 		sequences.map((sqs, index) => {
+			const start = index * outputSequenceFileLengthValue;
+			const end = start + outputSequenceFileLengthValue;
 			const outputFilePath = path.join(
 				outputPath,
-				`${index * outputSequenceFileLengthValue}-${
-					sqs.length
-				}sqs__${new Date().getTime()}.fasta`
+				`${start}-${end}_${new Date().getTime()}.fasta`
 			);
 			saveFastaFile(sqs, outputFilePath);
 		})
@@ -102,7 +102,10 @@ export const saveFastaFile = (
 ) => {
 	const content = sequences
 		.map((sequence) => {
-			let sequenceText = `>${sequence.name}\n`;
+			// additionally remove all newlines
+			let sequenceText = `>${sequence.name
+				.replace(/\n/g, "")
+				.replace(/\r/g, "")}\n`;
 			for (let i = 0; i < sequence.sequence.length; i += 60) {
 				sequenceText += sequence.sequence.slice(i, i + 60) + "\n";
 			}
