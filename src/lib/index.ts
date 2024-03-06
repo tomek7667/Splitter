@@ -61,40 +61,34 @@ export const run = async (
 		default:
 			throw new Error("Invalid file extension");
 	}
+	const sequences: { name: string; sequence: string }[][] = [];
+	for (
+		let i = 0;
+		i < allSequences.length;
+		i += outputSequenceFileLengthValue
+	) {
+		sequences.push(
+			allSequences.slice(i, i + outputSequenceFileLengthValue)
+		);
+	}
 
-	const sequences = allSequences.map(({ name, sequence }) => {
-		const sequenceLength = sequence.length;
-		const sequenceChunks = [];
-		for (
-			let i = 0;
-			i < sequenceLength;
-			i += outputSequenceFileLengthValue
-		) {
-			sequenceChunks.push({
-				name: name.trim(),
-				sequence: sequence.slice(i, i + outputSequenceFileLengthValue),
-			});
-		}
-		return sequenceChunks;
-	});
-
-	const [selectedPath] = dialog.showOpenDialogSync({
+	const selectedPaths = dialog.showOpenDialogSync({
 		title: "Select a folder to save the files in",
 		message: "Select a folder to save the files in",
 		properties: ["openDirectory"],
 	});
-	if (!selectedPath) {
+	if (!selectedPaths || selectedPaths.length === 0) {
 		throw new Error("No folder selected");
 	}
-
+	const [selectedPath] = selectedPaths;
 	const outputPath = path.resolve(selectedPath);
 	await Promise.all(
 		sequences.map((sqs, index) => {
 			const outputFilePath = path.join(
 				outputPath,
-				`${
-					index * outputSequenceFileLengthValue
-				}__${new Date().getTime()}.fasta`
+				`${index * outputSequenceFileLengthValue}-${
+					sqs.length
+				}sqs__${new Date().getTime()}.fasta`
 			);
 			saveFastaFile(sqs, outputFilePath);
 		})

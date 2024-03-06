@@ -1,7 +1,7 @@
 {
-	"name": "Splitter",
+	"name": "splitter",
 	"productName": "Splitter",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"main": ".webpack/main",
 	"scripts": {
 		"start": "electron-forge start",

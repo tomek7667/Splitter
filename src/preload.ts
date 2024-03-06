@@ -72,7 +72,9 @@ window.addEventListener("DOMContentLoaded", () => {
 		if (!success && errorMessage) {
 			alert(errorMessage);
 		}
-		alert("Successfully finished");
+		if (success) {
+			alert("Successfully finished");
+		}
 		unblockElement(splitButton);
 	});
 });
